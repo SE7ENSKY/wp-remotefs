@@ -28,21 +28,21 @@ function rfs_wphook_delete_file($filename){
 }
 
 // auto-upload local attachments to remote
-add_filter('wp_update_attachment_metadata', 'rfs_wphook_update_attachment_metadata');
+add_filter('wp_update_attachment_metadata', 'rfs_wphook_update_attachment_metadata', 59172, 1);
 function rfs_wphook_update_attachment_metadata($data) {
 	$uploadDir = wp_upload_dir();
-	file_put_contents("/tmp/wp-debug", print_r($data, true) . "\n\n" . print_r($uploadDir, true));
+	if (!is_file($uploadDir['basedir'] . '/' . $data['file'])) return $data;
+	$subdir = dirname($data['file']);
+	$subdir = $subdir == '.' ? '' : "/$subdir";
 	foreach ($data['sizes'] as $size => &$sizedata) {
-		$localPath = $uploadDir['basedir'] . $uploadDir['subdir'] . '/' . $sizedata['file'];
+		$localPath = $uploadDir['basedir'] . $subdir . '/' . $sizedata['file'];
 		if (file_exists($localPath)) {
 			$sizedata['url'] = rfs_put($localPath);
-			unlink($localPath);
 		}
 	}
 	$localPath = $uploadDir['basedir'] . '/' . $data['file'];
 	if (file_exists($localPath)) {
 		$data['url'] = rfs_put($localPath);
-		unlink($localPath);
 	}
 	return $data;
 }

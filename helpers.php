@@ -25,10 +25,17 @@ function rfs_local2remote($localPath) {
 	return substr($localPath, strlen($uploadDir['basedir']) + 1);
 }
 
+$RFS_2BFLUSHED = array();
+
 function rfs_put($localPath) {
 	global $RFS;
 	$path = rfs_local2remote($localPath);
+	
 	if ($RFS->put($path, $localPath)) {
+		global $RFS_2BFLUSHED;
+		if (count($RFS_2BFLUSHED) == 0) register_shutdown_function("rfs_flush_local_uploads");
+		$RFS_2BFLUSHED[] = $localPath;
+
 		return rfs_configuration()['public'] . '/' . $path;
 	} else {
 		die("RFS: failed put. Errors: " . print_r($RFS->errors(), true));
@@ -43,4 +50,11 @@ function rfs_delete($path) {
 function rfs_exists($path) {
 	global $RFS;
 	return $RFS->exists($path);
+}
+
+function rfs_flush_local_uploads() {
+	global $RFS_2BFLUSHED;
+	foreach ($RFS_2BFLUSHED as $path) {
+		unlink($path);
+	}
 }
