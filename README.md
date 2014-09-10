@@ -19,6 +19,7 @@ Attachments are automatically put to remote filesystem and not stored in local f
 * [image editor](http://en.support.wordpress.com/images/image-editing/) support
 * prevent file duplicates
 * auto delete files
+* support to work with root-relative-urls
 
 ## Roadmap
 * SFTP support

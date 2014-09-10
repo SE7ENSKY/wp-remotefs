@@ -3,7 +3,12 @@
 // avoid file duplicates with adding _counter to filenames
 add_filter('wp_handle_upload_prefilter', 'rfs_wphook_handle_upload_prefilter');
 function rfs_wphook_handle_upload_prefilter($file) {
-	while (rfs_exists($file['name'])) {
+	$uploadDir = wp_upload_dir();
+	$prefix = '';
+	if (!empty($uploadDir['subdir']))
+		$prefix = substr($uploadDir['subdir'], 1) . '/';
+	
+	while (rfs_exists($prefix . $file['name'])) {
 		$info = pathinfo($file['name']);
 		if (preg_match('|^(?<name>.*)_(?<counter>\d+)$|', $info['filename'], $matches)) {
 			$counter = intval($matches['counter']);
@@ -47,8 +52,9 @@ function rfs_wphook_update_attachment_metadata($data) {
 	return $data;
 }
 
+
 // hooked upload dir
-add_filter('upload_dir', 'rfs_wphook_upload_dir');
+add_filter('upload_dir', 'rfs_wphook_upload_dir', 1);
 function rfs_wphook_upload_dir($data) {
 	$rfsConfig = rfs_configuration();
 	$data['baseurl'] = $rfsConfig['public'];
