@@ -60,6 +60,7 @@ class FTPRemoteFS extends RemoteFS {
 		if ($connection) {
 			$logged = @ftp_login($connection, $this->login, $this->password);
 			if ($logged) {
+				@ftp_pasv($connection, true);
 				$this->connection = $connection;
 				$this->releaseErrorHandler();
 				return true;
