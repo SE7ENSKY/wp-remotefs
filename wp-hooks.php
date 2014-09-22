@@ -36,7 +36,6 @@ function rfs_wphook_delete_file($filename){
 add_filter('wp_update_attachment_metadata', 'rfs_wphook_update_attachment_metadata', 59172, 1);
 function rfs_wphook_update_attachment_metadata($data) {
 	$uploadDir = wp_upload_dir();
-	if (!is_file($uploadDir['basedir'] . '/' . $data['file'])) return $data;
 	$subdir = dirname($data['file']);
 	$subdir = $subdir == '.' ? '' : "/$subdir";
 	foreach ($data['sizes'] as $size => &$sizedata) {
