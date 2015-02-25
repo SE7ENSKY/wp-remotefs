@@ -4,7 +4,8 @@ function rfs_configuration() {
 	$private = null;
 	$public = null;
 
-	if (!empty(getenv("REMOTEFS_PRIVATE_URL"))) {
+	$p = getenv("REMOTEFS_PRIVATE_URL");
+	if (!empty($p)) {
 		$private = getenv("REMOTEFS_PRIVATE_URL");
 		$public = getenv("REMOTEFS_PUBLIC_URL");
 	} else {
