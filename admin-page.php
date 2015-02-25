@@ -52,7 +52,8 @@ function rfs_wphook_admin_settings_page() { ?>
 	<div class="wrap">
 		<h2>RemoteFS settings</h2>
 
-		<?php if (!empty(getenv("REMOTEFS_PRIVATE_URL"))) : ?>
+		<?php $p = getenv("REMOTEFS_PRIVATE_URL"); ?>
+		<?php if (!empty($p)) : ?>
 
 			<p class="description">configured via environment variables</p>
 			
