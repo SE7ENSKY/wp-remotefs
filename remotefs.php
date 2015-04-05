@@ -3,7 +3,7 @@
 Plugin Name: RemoteFS
 Plugin URI: http://github.com/Se7enSky/wp-remotefs
 Description: Detach attachments to remote filesystem. Stupid simple and minimalistic solution for Heroku, 12factor and CDN support. And also almost transparent for WP, plugins and for user.
-Version: 1.5.3
+Version: 1.5.4
 Author: Ivan Kravchenko @ Se7enSky
 Author URI: http://www.se7ensky.com/
 License: MIT

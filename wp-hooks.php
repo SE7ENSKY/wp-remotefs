@@ -33,18 +33,24 @@ function rfs_wphook_delete_file($filename){
 }
 
 // auto-upload local attachments to remote
-add_filter('wp_update_attachment_metadata', 'rfs_wphook_update_attachment_metadata', 59172, 1);
-function rfs_wphook_update_attachment_metadata($data) {
+add_filter('wp_update_attachment_metadata', 'rfs_wphook_update_attachment_metadata', 59172, 2);
+function rfs_wphook_update_attachment_metadata($data, $post_id) {
+	$post_id = (int) $post_id;
+	if ( !$post = get_post( $post_id ) )
+		return false;
 	$uploadDir = wp_upload_dir();
-	$subdir = dirname($data['file']);
+	$file = get_post_meta( $post->ID, '_wp_attached_file', true);
+	$subdir = dirname($file);
 	$subdir = $subdir == '.' ? '' : "/$subdir";
-	foreach ($data['sizes'] as $size => &$sizedata) {
-		$localPath = $uploadDir['basedir'] . $subdir . '/' . $sizedata['file'];
-		if (file_exists($localPath)) {
-			$sizedata['url'] = rfs_put($localPath);
+	if (isset($data['sizes'])) {
+		foreach ($data['sizes'] as $size => &$sizedata) {
+			$localPath = $uploadDir['basedir'] . $subdir . '/' . $sizedata['file'];
+			if (file_exists($localPath)) {
+				$sizedata['url'] = rfs_put($localPath);
+			}
 		}
 	}
-	$localPath = $uploadDir['basedir'] . '/' . $data['file'];
+	$localPath = $uploadDir['basedir'] . '/' . $file;
 	if (file_exists($localPath)) {
 		$data['url'] = rfs_put($localPath);
 	}
